@@ -1,82 +1,56 @@
-.App {
-  text-align: center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* Main page styling */
-.main-page-center {
+
+/* Style for centering search box only */
+.search-box-center {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: auto;
 }
-/* Custom search bar styles */
-.custom-search-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 20px;
-  border-radius: 22px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 700px; /* Increase width */
+
+/* TokenList.css */
+.token-list-container {
+  width: 80%;
+  max-width: 1000px;
+  min-width: 600px;
   margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.custom-search-input {
-  border: none;
-  outline: none;
-  width: 100%;
-  margin-right: 10px;
-  font-size: 18px; /* Larger font size for clarity */
-  padding: 8px; /* Larger padding for bigger input area */
-  font-family: monospace !important;
-  font-style: italic;
+.token-table-head {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  background-color: #f0f2f5;
 }
 
-.custom-search-button {
-  background: #04befe;
-  border: none;
-  padding: 8px 16px;
-  color: white;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 16px; /* Matching font size for button */
-}
-
-/* New style for explanatory text */
-.search-description {
+.token-head-cell {
+  flex: 1;
   text-align: center;
-  font-size: 3em;
-  color: #666;
-  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.token-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 12px 20px;
+  margin: 10px 0;
+  border-radius: 6px;
+  color: #333; /* 调整文字颜色为深灰，以提高可读性 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.token-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.token-section {
+  flex: 1;
+  text-align: center;
 }
