@@ -1,11 +1,12 @@
 /* Main page styling */
 
-/* Style for centering search box only */
+/* Style for centering search box */
 .search-box-center {
   display: flex;
   justify-content: center;
   align-items: center;
   height: auto;
+  margin: 16px;
 }
 
 /* TokenList.css */
@@ -40,7 +41,7 @@
   padding: 12px 20px;
   margin: 10px 0;
   border-radius: 6px;
-  color: #333; /* 调整文字颜色为深灰，以提高可读性 */
+  color: #333;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease-in-out;
 }

@@ -1,5 +1,5 @@
 // SearchBox.js
-import React from 'react';
+import React, { useState } from 'react';
 import { Input, Button, Form } from 'antd';
 import axios from 'axios';
 
@@ -46,14 +46,14 @@ const SearchBox = ({ setTokens, setShowList, setLoading, setAddress }) => {
         {
           name: 'Ethereum',
           price: `$${Number(ethPrice).toFixed(2)}`,
-          balance: formatBalance(ethBalance, 6), 
+          balance: formatBalance(ethBalance, 6),
           value: `$${Number(ethPrice * ethBalance).toFixed(4)}`,
           icon: tokenIcons['Ethereum']
         },
         {
           name: 'USDT',
           price: '$1.00',
-          balance: formatBalance(usdtBalance, 2), 
+          balance: formatBalance(usdtBalance, 2),
           value: `$${formatBalance(usdtBalance, 4)}`,
           icon: tokenIcons['USDT']
         },
@@ -109,8 +109,8 @@ const SearchBox = ({ setTokens, setShowList, setLoading, setAddress }) => {
       form={form}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
+      className="search-box-center"
       layout="inline"
-      style={{ justifyContent: 'center', width: '100%', padding: '20px' }}
     >
       <Form.Item
         name="address"
@@ -125,7 +125,7 @@ const SearchBox = ({ setTokens, setShowList, setLoading, setAddress }) => {
         <Input
           placeholder="0x..."
           size='large'
-          style={{ width: 450 }}
+          style={{ width: 450, margin: "10px 0" }}
         />
       </Form.Item>
       <Form.Item shouldUpdate>
