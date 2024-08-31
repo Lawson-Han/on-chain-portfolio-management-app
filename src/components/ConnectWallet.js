@@ -4,7 +4,7 @@ import { Button, message, ConfigProvider } from 'antd';
 import { WalletOutlined, DisconnectOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 
-const ConnectWallet = ({ setWalletAddress }) => {
+const ConnectWallet = ({ setWalletAddress, collapsed }) => {
     const [localAddress, setLocalAddress] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -36,6 +36,13 @@ const ConnectWallet = ({ setWalletAddress }) => {
         };
     }, [localAddress, setWalletAddress]);
 
+    useEffect(() => {
+        if (!localAddress) {
+            message.info("Wallet disconnected.");
+        }
+    }, [localAddress]);
+
+
     const connectWalletHandler = async () => {
         if (!window.ethereum) {
             message.error("MetaMask is not installed. Please install it to use this feature.");
@@ -55,28 +62,40 @@ const ConnectWallet = ({ setWalletAddress }) => {
             const address = await signer.getAddress();
             setLocalAddress(address);
             setWalletAddress(address);
+            console.log(address);
             message.success("Metamask Wallet connected!");
-
-
 
         } catch (error) {
             console.error("Failed to connect to MetaMask:", error);
-            message.error("Failed to connect to MetaMask. Please try again.");
+            message.error("Failed to connect to MetaMask.");
         }
         setLoading(false);
     };
 
 
-    const disconnectWalletHandler = () => {
+    const disconnectWalletHandler = async () => {
         setLoading(true);
+        try {
+            await window.ethereum.request({
+                method: "wallet_revokePermissions",
+                params: [
+                    {
+                        eth_accounts: {},
+                    },
+                ],
+            });
+            console.log("Permissions revoked successfully.");
+        } catch (error) {
+            console.error("Failed to revoke permissions:", error);
+        }
+    
         setTimeout(() => {
-            setLocalAddress(null);
+            setLocalAddress(null); 
             setWalletAddress(null);
             setLoading(false);
-            message.info("Wallet disconnected.");
         }, 500);
     };
-
+    
     const linearGradientButton = css`
         &.${rootPrefixCls}-btn-primary:not([disabled]):not(.${rootPrefixCls}-btn-dangerous) {
           border-width: 0;
@@ -100,13 +119,13 @@ const ConnectWallet = ({ setWalletAddress }) => {
 
     return (
         <>
-            {localAddress !== null ? (
+            {localAddress ? (
                 <Button type="dashed" danger icon={<DisconnectOutlined />} onClick={disconnectWalletHandler} loading={loading}>
-                    Disconnect Metamask
+                    {!collapsed && "Disconnect Metamask"}
                 </Button>
             ) : (
-                <Button type="primary" icon={<WalletOutlined />} className={linearGradientButton} onClick={connectWalletHandler} loading={loading}>
-                    Login Wallet
+                <Button type={!collapsed ? "primary" : "text"} icon={<WalletOutlined />} className={!collapsed && linearGradientButton} onClick={connectWalletHandler} loading={loading}>
+                    {!collapsed && "Login Wallet"}
                 </Button>
             )}
         </>

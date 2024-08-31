@@ -4,10 +4,16 @@
 .search-box-center {
   display: flex;
   justify-content: center;
-  align-items: center;
   height: auto;
-  margin: 16px;
+  margin-top: 28px ;
 }
+
+/* Wallet address after login */
+.wallet-address {
+  color: #5e5d5d;
+  font-style: italic;
+}
+
 
 /* TokenList.css */
 .token-list-container {
@@ -18,6 +24,7 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 
 .token-table-head {

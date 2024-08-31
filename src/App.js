@@ -1,7 +1,15 @@
 // App.js
 import React, { useState } from 'react';
-import { Layout, Menu, Avatar, Button, Space, Typography } from 'antd';
-import { UserOutlined, GithubOutlined } from '@ant-design/icons';
+import { Layout, Menu, Avatar, Button, Space, Typography, message, } from 'antd';
+import {
+  SearchOutlined,
+  TransactionOutlined,
+  UserOutlined,
+  GithubOutlined,
+  PieChartOutlined,
+  MoneyCollectOutlined,
+  VerticalAlignTopOutlined
+} from '@ant-design/icons';
 import './App.css';
 import SearchBox from './components/SearchBox';
 import TokenList from './components/TokenList';
@@ -12,6 +20,63 @@ const { Sider, Content } = Layout;
 const { Paragraph } = Typography;
 
 const App = () => {
+  const [activeComponent, setActiveComponent] = useState('search');
+
+  // Side Bar
+  const items = [
+    {
+      key: '1',
+      icon: <SearchOutlined />,
+      label: 'Home',
+      onClick: () => setActiveComponent('search')
+    },
+    {
+      key: '2',
+      icon: <PieChartOutlined />,
+      label: 'My Portfolio',
+      onClick: () => {
+        if (!walletAddress) {
+          message.info('You need to login with your wallet first');
+        } else {
+          setActiveComponent('portfolio');
+        }
+      }
+    },
+    {
+      key: '3',
+      icon: <TransactionOutlined />,
+      label: 'Transaction',
+      children: [
+        {
+          key: '3-1',
+          icon: <VerticalAlignTopOutlined />,
+          label: 'Send',
+          onClick: () => {
+            if (!walletAddress) {
+              message.info('You need to login with your wallet first');
+            } else {
+              setActiveComponent('send');
+            }
+          }
+        },
+        {
+          key: '3-2',
+          icon: <MoneyCollectOutlined />,
+          label: 'Receive',
+          onClick: () => {
+            if (!walletAddress) {
+              message.info('You need to login with your wallet first');
+            } else {
+              setActiveComponent('receive');
+            }
+          },
+        }
+      ],
+    },
+  ];
+
+  const [collapsed, setCollapsed] = useState(false);
+
   // Search Bar
   const [tokens, setTokens] = useState([]);
   const [showList, setShowList] = useState(false);
@@ -28,52 +93,74 @@ const App = () => {
     const total = newTokens.reduce((acc, token) => acc + parseFloat(token.value.replace('$', '')), 0);
     setTotalBalance(total);
   };
+  // Address ellipse customised
+  const formatAddress = (address) => {
+    if (!address || collapsed) return '';
+    const start = address.slice(0, 8);
+    const end = address.slice(-4);
+    return `${start}...${end}`;
+  };
 
-
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider width={300} style={{ backgroundColor: 'white', boxShadow: '2px 0 6px rgba(0,0,0,0.1)' }}>
-        <div style={{ padding: '16px', textAlign: 'center' }}>
-          <Avatar size={96} icon={<UserOutlined />} />
-          <Space direction="vertical" style={{ width: '100%', margin: '20px 0' }}>
-            {walletAddress !== null && (
-              <Paragraph copyable>{walletAddress}</Paragraph>
-            )}
-            <ConnectWallet setWalletAddress={setWalletAddress} />
-
-          </Space>
-        </div>
-        <Menu mode="inline" style={{ borderRight: 0 }}>
-          <Menu.Item key="1">My Wallet</Menu.Item>
-          <Menu.Item key="2">Send & Receive</Menu.Item>
-        </Menu>
-        <div style={{ padding: '16px', textAlign: 'center', position: 'absolute', bottom: 0, width: '100%' }}>
-          <Button type="link" icon={<GithubOutlined />} href="https://github.com/Lawson-Han" target="_blank">Visit my GitHub</Button>
-        </div>
-      </Sider >
-      {walletAddress === null ? (
-        <Content style={{ width: '600px' }}>
-          <SearchBox
-            setTokens={handleSetTokens}
-            setShowList={setShowList}
-            setLoading={setLoading}
-            setAddress={setAddress}
-          />
-          {showList &&
+  const renderComponent = () => {
+    switch (activeComponent) {
+      case 'search':
+        return (<> <SearchBox
+          setTokens={handleSetTokens}
+          setShowList={setShowList}
+          setLoading={setLoading}
+          setAddress={setAddress}
+          showList={showList}
+        />
+          {
+            showList &&
             <TokenList
               tokens={tokens}
               loading={loading}
               address={address}
               totalBalance={totalBalance}
-            />}
+            />
+          }</>);
+      case 'portfolio':
+        return <WalletOverview walletAddress={walletAddress}/>;
+      default:
+        return null;
+    }
+  };
 
-        </Content>
-      ) : (
-        <></>
-      )
-      }
 
-    </Layout >
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider width={300} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}
+        style={{ backgroundColor: 'white', boxShadow: '2px 0 6px rgba(0,0,0,0.1)' }}>
+        <div style={{ padding: '16px', textAlign: 'center' }}>
+          <Avatar size={collapsed ? 48 : 96} icon={<UserOutlined />} />
+          <Space direction="vertical" size={0} style={{ width: '100%', margin: '20px 0 10px 0' }}>
+            {walletAddress !== null && (
+              <Paragraph className="wallet-address" copyable={ !collapsed && { text: walletAddress }}>
+                {formatAddress(walletAddress)}
+              </Paragraph>
+            )}
+            <ConnectWallet setWalletAddress={setWalletAddress} collapsed={collapsed} />
+          </Space>
+        </div>
+        <Menu
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['3']}
+          mode="inline"
+          items={items}
+        />
+        <div style={{ padding: '16px', textAlign: 'center', position: 'relative', margin: "20px 0", width: '100%' }}>
+          {collapsed ?
+            <Button type="link" icon={<GithubOutlined />} href="https://github.com/Lawson-Han" target="_blank"></Button>
+            :
+            <Button type="link" icon={<GithubOutlined />} href="https://github.com/Lawson-Han" target="_blank">Visit my GitHub</Button>
+          }
+        </div>
+      </Sider >
+      <Content style={{ width: '600px', margin: '0 auto' }}>
+        {renderComponent()}
+      </Content>
+    </Layout>
   );
 };
 
