@@ -1,11 +1,8 @@
 // SearchBox.js
 import React from 'react';
-import { Timeline, Form, Input, Button, Typography, Row, Col, Card } from 'antd';
+import { Form, Input, Button } from 'antd';
+import MainCard from './MainCard';
 import axios from 'axios';
-import {
-  MailOutlined
-} from '@ant-design/icons';
-const { Title, Paragraph } = Typography;
 
 
 const API_KEY = '96VSGKTZFGYPDJ9H936ANDMJ2DD573X9JS';
@@ -129,7 +126,7 @@ const SearchBox = ({ setTokens, showList, setShowList, setLoading, setAddress })
           ]}
         >
           <Input
-            placeholder="0x..."
+            placeholder="Enter any Ethereum wallet address..."
             size='large'
             style={{ width: 450 }}
           />
@@ -150,29 +147,7 @@ const SearchBox = ({ setTokens, showList, setShowList, setLoading, setAddress })
           )}
         </Form.Item>
       </Form>
-      {!showList && (
-        <Row justify="center" align="top" style={{ padding: '20px', background: '#f0f2f5' }}>
-          <Col span={24}>
-            <Card bordered={false} style={{ maxWidth: 800, margin: '0 auto' }}>
-              <Typography>
-                <Title level={1}>On-Chain Portfolio Manager</Title>
-                <Paragraph>This project was developed to provide a comprehensive solution for managing cryptocurrencies directly on the blockchain. It allows users to view balances and perform transactions seamlessly.</Paragraph>
-                <Paragraph><strong>Developed by:</strong> Dongsheng Han</Paragraph>
-
-              </Typography>
-              <div style={{ marginTop: "50px" }}>
-                <Timeline pending="Waiting for response...">
-                  <Timeline.Item>Day 1: Set up the environment, established the overall layout, and designed the UI for the sidebar.</Timeline.Item>
-                  <Timeline.Item>Day 2: Added a search box, selected the API libraries, completed the search logic, and created a simple balance display interface.</Timeline.Item>
-                  <Timeline.Item>Day 3: Further refined the balance display interface, making it a reusable component for displaying assets when connecting to a wallet.</Timeline.Item>
-                  <Timeline.Item>Day 4: Fully implemented the wallet connection functionality, tested wallet switching and disconnection features, and redesigned the sidebar to support dynamic resizing without display errors.</Timeline.Item>
-                  <Timeline.Item>Day 5: Redesigned the main page to ensure error-free display logic and enhanced user interface clarity.</Timeline.Item>
-                </Timeline>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-      )}
+      {!showList && <MainCard />}
     </>
   );
 };
