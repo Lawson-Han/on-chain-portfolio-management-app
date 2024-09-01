@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import { Card, Col, Row, Statistic, Skeleton, List } from 'antd';
 import TokenList from './TokenList';
 
 const tokenAbi = [
@@ -20,7 +19,6 @@ const getBalance = async (walletAddress) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const balance = await provider.getBalance(walletAddress);
         return balance
-        return 
     } catch (error) {
         console.error('Failed to fetch balance:', error);
     }

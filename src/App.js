@@ -15,6 +15,8 @@ import SearchBox from './components/SearchBox';
 import TokenList from './components/TokenList';
 import ConnectWallet from './components/ConnectWallet';
 import WalletOverview from './components/WalletOverview';
+import SendMoney from './components/SendMoney';
+import ReceiveMoney from './components/ReceiveMoney';
 
 const { Sider, Content } = Layout;
 const { Paragraph } = Typography;
@@ -121,7 +123,11 @@ const App = () => {
             />
           }</>);
       case 'portfolio':
-        return <WalletOverview walletAddress={walletAddress}/>;
+        return <WalletOverview walletAddress={walletAddress} />;
+      case 'send':
+        return <SendMoney walletAddress={walletAddress}/>;
+      case 'receive':
+        return <ReceiveMoney walletAddress={walletAddress} />;
       default:
         return null;
     }
@@ -136,7 +142,7 @@ const App = () => {
           <Avatar size={collapsed ? 48 : 96} icon={<UserOutlined />} />
           <Space direction="vertical" size={0} style={{ width: '100%', margin: '20px 0 10px 0' }}>
             {walletAddress !== null && (
-              <Paragraph className="wallet-address" copyable={ !collapsed && { text: walletAddress }}>
+              <Paragraph className="wallet-address" copyable={!collapsed && { text: walletAddress }}>
                 {formatAddress(walletAddress)}
               </Paragraph>
             )}
