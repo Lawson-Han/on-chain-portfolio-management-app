@@ -73,7 +73,9 @@ const ConnectWallet = ({ collapsed }) => {
         } catch (error) {
             console.error("Failed to revoke permissions:", error);
         }
-        setLoading(false);
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
     };
 
     const linearGradientButton = css`
@@ -101,7 +103,7 @@ const ConnectWallet = ({ collapsed }) => {
         <>
             {walletAddress ? (
                 <Button type="dashed" danger icon={<DisconnectOutlined />} onClick={disconnectWalletHandler} loading={loading}>
-                    {!collapsed && "Disconnect Metamask:"}
+                    {!collapsed && "Disconnect Metamask"}
                 </Button>
             ) : (
                 <Button type={!collapsed ? "primary" : "text"} icon={<WalletOutlined />} className={!collapsed && linearGradientButton} onClick={connectWalletHandler} loading={loading}>

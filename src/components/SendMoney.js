@@ -12,6 +12,7 @@ const getBalance = async (currency, walletAddress) => {
         'USDT': '0xdAC17F958D2ee523a2206206994597C13D831ec7',
         'USDC': '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
     };
+    console.log(currency)
 
     if (currency === 'ETH') {
         const balance = await provider.getBalance(walletAddress);
@@ -24,7 +25,7 @@ const getBalance = async (currency, walletAddress) => {
         const currentBalance = await tokenContract.balanceOf(walletAddress);
         return ethers.utils.formatUnits(currentBalance, 6);
     } else {
-        throw new Error('Unsupported currency');
+        console.error('Transaction rejected:');
     }
 };
 
@@ -39,11 +40,10 @@ const SendMoney = () => {
     useEffect(() => {
         // Load default currency balance on component mount
         (async () => {
-            const defaultCurrency = 'ETH';
-            const balance = await getBalance(defaultCurrency, walletAddress);
+            const balance = await getBalance(currencyUnit, walletAddress);
             setMaxAmount(balance);
         })();
-    }, [walletAddress]);
+    }, [currencyUnit, walletAddress]);
 
     const onFinish = async (values) => {
         try {
@@ -58,10 +58,10 @@ const SendMoney = () => {
             message.success('Transaction submitted successfully!');
         } catch (error) {
             console.error('Transaction failed:', error);
-            message.error('Transaction failed!');
+            message.error('Transaction rejected!');
         }
         setLoading(false);
-        const balance = await getBalance(values.currency, walletAddress);
+        const balance = await getBalance(currencyUnit, walletAddress);
         setMaxAmount(balance);
     };
 
@@ -114,7 +114,7 @@ const SendMoney = () => {
                     name="amount"
                     label="Amount"
                     rules={[{ required: true, message: 'Please input the amount to send!' }]}
-                    extra={`Available balance: ${loading ? '0' : parseFloat(maxAmount).toFixed(6)} ${currencyUnit}`}>
+                    extra={`Available balance: ${parseFloat(maxAmount) === 0 ? '0.00' : parseFloat(maxAmount).toFixed(6)} ${currencyUnit}`}>
                     <InputNumber
                         prefix={<DollarCircleOutlined />}
                         min={0.00}
