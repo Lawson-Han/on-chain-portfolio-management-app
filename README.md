@@ -1,11 +1,37 @@
 # on-chain-portfolio-management-app
-It's a test assignment for the interest of the role for a famous web3 company.
 
-# Getting Started with Create React App
+> It's a test assignment for the interest of the role for a famous web3 company.
+
+This project is an On-Chain Portfolio Manager designed to provide a comprehensive solution for managing cryptocurrencies directly on the blockchain. It allows users to view balances and perform transactions. An extra function I added to this project is searching through Etherscan API.
+
+## Features
+- **Search Address**: Users can search any Etheruem address through Etherscan API.
+- **View Balances:** Users can see their cryptocurrency balances directly connected via their Metamask wallet.
+- **Perform Transactions:** Enables sending and receiving cryptocurrencies.
+- **Connect to Wallets:** Supports connections to Ethereum wallets using MetaMask.
+- **Responsive UI:** Includes a dynamic layout for easy navigation.
+
+## Developed by
+
+- **Name:** Dongsheng Han
+- **Email:** [lawsonhan123@gmail.com](mailto:lawsonhan123@gmail.com)
+- **Phone:** +852 54687392
+
+## Screenshots
+### Main Page
+![main-card](images-for-readme/main-card.png)
+
+### Portfolio
+The sidebar can be collapsed.
+![sidebar](images-for-readme/portfolio-sidebar-collapse.png)
+
+### Send & Receive
+![send](images-for-readme/send-money.png)
+![receive](images-for-readme/receive-money.png)
+
+## Project Setup
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
 
 In the project directory, you can run:
 
