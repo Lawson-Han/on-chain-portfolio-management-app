@@ -17,12 +17,14 @@ import ConnectWallet from './components/ConnectWallet';
 import WalletOverview from './components/WalletOverview';
 import SendMoney from './components/SendMoney';
 import ReceiveMoney from './components/ReceiveMoney';
-
+import { useWallet } from './components/WalletContext';
 const { Sider, Content } = Layout;
 const { Paragraph } = Typography;
 
+
 const App = () => {
   const [activeComponent, setActiveComponent] = useState('search');
+  const { walletAddress } = useWallet();
 
   // Side Bar
   const items = [
@@ -86,9 +88,6 @@ const App = () => {
   const [address, setAddress] = useState('');
   const [totalBalance, setTotalBalance] = useState(0);
 
-  // My Wallet
-  const [walletAddress, setWalletAddress] = useState(null);
-
   // Calculate total balance
   const handleSetTokens = (newTokens) => {
     setTokens(newTokens);
@@ -123,11 +122,11 @@ const App = () => {
             />
           }</>);
       case 'portfolio':
-        return <WalletOverview walletAddress={walletAddress} />;
+        return <WalletOverview />;
       case 'send':
-        return <SendMoney walletAddress={walletAddress}/>;
+        return <SendMoney />;
       case 'receive':
-        return <ReceiveMoney walletAddress={walletAddress} />;
+        return <ReceiveMoney />;
       default:
         return null;
     }
@@ -146,7 +145,7 @@ const App = () => {
                 {formatAddress(walletAddress)}
               </Paragraph>
             )}
-            <ConnectWallet setWalletAddress={setWalletAddress} collapsed={collapsed} />
+            <ConnectWallet collapsed={collapsed} />
           </Space>
         </div>
         <Menu

@@ -1,11 +1,13 @@
+// ConnectWallet.js
 import React, { useContext, useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import { Button, message, ConfigProvider } from 'antd';
 import { WalletOutlined, DisconnectOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
+import { useWallet } from './WalletContext';
 
-const ConnectWallet = ({ setWalletAddress, collapsed }) => {
-    const [localAddress, setLocalAddress] = useState(null);
+const ConnectWallet = ({ collapsed }) => {
+    const { walletAddress, updateWallet, clearWallet } = useWallet();
     const [loading, setLoading] = useState(false);
 
     const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
@@ -14,14 +16,10 @@ const ConnectWallet = ({ setWalletAddress, collapsed }) => {
     useEffect(() => {
         const handleAccountsChanged = (accounts) => {
             if (accounts.length === 0) {
-                // MetaMask is locked or the user has disconnected all accounts
                 console.log("Please connect to MetaMask.");
-                setLocalAddress(null);
-                setWalletAddress(null);
-            } else if (accounts[0] !== localAddress) {
-                // Handle accounts change
-                setLocalAddress(accounts[0]);
-                setWalletAddress(accounts[0]);
+                clearWallet();
+            } else if (accounts[0] !== walletAddress) {
+                updateWallet(accounts[0]);
             }
         };
 
@@ -34,14 +32,7 @@ const ConnectWallet = ({ setWalletAddress, collapsed }) => {
                 window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
             }
         };
-    }, [localAddress, setWalletAddress]);
-
-    useEffect(() => {
-        if (!localAddress) {
-            message.info("Wallet disconnected.");
-        }
-    }, [localAddress]);
-
+    }, [walletAddress, updateWallet, clearWallet]);
 
     const connectWalletHandler = async () => {
         if (!window.ethereum) {
@@ -51,27 +42,20 @@ const ConnectWallet = ({ setWalletAddress, collapsed }) => {
         setLoading(true);
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const accounts = await provider.listAccounts();  // Get current account list
+            const accounts = await provider.listAccounts();
 
-            // Check if there are any accounts already connected
             if (accounts.length <= 0) {
-                // If no accounts are connected, request to connect an account
                 await provider.send("eth_requestAccounts", []);
             }
             const signer = provider.getSigner();
             const address = await signer.getAddress();
-            setLocalAddress(address);
-            setWalletAddress(address);
-            console.log(address);
-            message.success("Metamask Wallet connected!");
-
+            updateWallet(address);
         } catch (error) {
             console.error("Failed to connect to MetaMask:", error);
             message.error("Failed to connect to MetaMask.");
         }
         setLoading(false);
     };
-
 
     const disconnectWalletHandler = async () => {
         setLoading(true);
@@ -85,27 +69,23 @@ const ConnectWallet = ({ setWalletAddress, collapsed }) => {
                 ],
             });
             console.log("Permissions revoked successfully.");
+            clearWallet();
         } catch (error) {
             console.error("Failed to revoke permissions:", error);
         }
-    
-        setTimeout(() => {
-            setLocalAddress(null); 
-            setWalletAddress(null);
-            setLoading(false);
-        }, 500);
+        setLoading(false);
     };
-    
+
     const linearGradientButton = css`
         &.${rootPrefixCls}-btn-primary:not([disabled]):not(.${rootPrefixCls}-btn-dangerous) {
           border-width: 0;
           > span {
-            position: relative;
+            position:relative;
           }
           &::before {
             content: '';
             background: linear-gradient(135deg, #6253e1, #04befe);
-            position: absolute;
+            position:absolute;
             inset: 0;
             opacity: 1;
             transition: all 0.3s;
@@ -119,9 +99,9 @@ const ConnectWallet = ({ setWalletAddress, collapsed }) => {
 
     return (
         <>
-            {localAddress ? (
+            {walletAddress ? (
                 <Button type="dashed" danger icon={<DisconnectOutlined />} onClick={disconnectWalletHandler} loading={loading}>
-                    {!collapsed && "Disconnect Metamask"}
+                    {!collapsed && "Disconnect Metamask:"}
                 </Button>
             ) : (
                 <Button type={!collapsed ? "primary" : "text"} icon={<WalletOutlined />} className={!collapsed && linearGradientButton} onClick={connectWalletHandler} loading={loading}>

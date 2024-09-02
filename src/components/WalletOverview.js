@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import TokenList from './TokenList';
+import { useWallet } from './WalletContext';
 
 const tokenAbi = [
     "function balanceOf(address) view returns (uint)",
@@ -39,10 +40,12 @@ const getTokenBalance = async (provider, walletAddress, tokenAddress) => {
 
 
 
-const WalletOverview = ({ walletAddress }) => {
+const WalletOverview = () => {
     const [balance, setBalance] = useState('0.00');
     const [loading, setLoading] = useState(false);
     const [tokens, updateTokens] = useState([]);
+
+    const { walletAddress } = useWallet();
 
     const fetchAndSetTokens = async (walletAddress, updateTokens, setLoading) => {
         try {

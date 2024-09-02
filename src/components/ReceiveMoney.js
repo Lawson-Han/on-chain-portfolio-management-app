@@ -1,10 +1,12 @@
 import React from 'react';
 import { Card, Typography, Input, Button, message, Divider, QRCode, Space } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
+import { useWallet } from './WalletContext';
 
 const { Title, Paragraph } = Typography;
 
-const ReceiveMoney = ({ walletAddress }) => {
+const ReceiveMoney = () => {
+    const { walletAddress  } = useWallet();
     const handleCopy = () => {
         navigator.clipboard.writeText(walletAddress)
             .then(() => message.success('Address copied to clipboard!'))

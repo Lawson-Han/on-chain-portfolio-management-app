@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Input, InputNumber, Radio, message, Card, Typography } from 'antd';
 import { WalletOutlined, DollarCircleOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { ethers } from 'ethers';
+import { useWallet } from './WalletContext';
 const { Title } = Typography;
 
 const getBalance = async (currency, walletAddress) => {
@@ -27,11 +28,13 @@ const getBalance = async (currency, walletAddress) => {
     }
 };
 
-const SendMoney = ({ walletAddress }) => {
+const SendMoney = () => {
     const [form] = Form.useForm();
     const [maxAmount, setMaxAmount] = useState(null);
     const [currencyUnit, setCurrencyUnit] = useState('ETH');
     const [loading, setLoading] = useState(false);
+
+    const { walletAddress } = useWallet();
 
     useEffect(() => {
         // Load default currency balance on component mount
